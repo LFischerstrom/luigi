@@ -502,6 +502,10 @@ class BigQueryLoadTask(MixinBigQueryBulkComplete, luigi.Task):
         """	Indicates if BigQuery should allow quoted data sections that contain newline characters in a CSV file. The default value is false."""
         return False
 
+    @property
+    def autodetect(self):
+        return False
+
     def run(self):
         output = self.output()
         assert isinstance(output, BigQueryTarget), 'Output must be a BigQueryTarget, not %s' % (output)
@@ -524,7 +528,8 @@ class BigQueryLoadTask(MixinBigQueryBulkComplete, luigi.Task):
                     'writeDisposition': self.write_disposition,
                     'sourceUris': source_uris,
                     'maxBadRecords': self.max_bad_records,
-                    'ignoreUnknownValues': self.ignore_unknown_values
+                    'ignoreUnknownValues': self.ignore_unknown_values,
+                    'autodetect': self.autodetect
                 }
             }
         }
